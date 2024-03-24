@@ -1,0 +1,35 @@
+version: "3.8"
+
+# add the serivces needed (postgres,go)
+services:
+  postgres:
+    container_name: "docker-gs-ping"
+    image: postgres:15.0
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Amena3899"
+      POSTGRES_DB: "postgres"
+    ports:
+      - 5432:5432
+
+    volumes: 
+      - dbdata:/var/lib/postgresql/data
+
+  taskapp:
+    container_name: taskapp
+    # network_mode: "host"
+    # build the Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8081:5000
+    build:
+      context: .
+    depends_on:
+      - "postgres"
+
+
+volumes:
+  dbdata: # create the volume for persisting data.
